@@ -1,4 +1,4 @@
-package v1
+package api
 
 type Coordinates struct {
 	Latitude  float32 `json:"lan"`
