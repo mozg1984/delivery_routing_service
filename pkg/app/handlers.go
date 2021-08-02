@@ -7,18 +7,24 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func CreateDelivery(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+type Handler struct{}
+
+func NewHandler() *Handler {
+	return &Handler{}
+}
+
+func (h *Handler) CreateDelivery(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Create delivery")
 }
 
-func GetDeliveries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (h *Handler) GetDeliveries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Get list of deliveries ordered by created time")
 }
 
-func GetDelivery(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (h *Handler) GetDelivery(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Get delivery")
 }
 
-func GetRouteDistance(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (h *Handler) GetRouteDistance(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Calculate route distance and return it")
 }
