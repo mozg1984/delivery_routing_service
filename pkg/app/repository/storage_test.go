@@ -2,13 +2,10 @@ package repository
 
 import (
 	"fmt"
-	"log"
 	"testing"
-	"time"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/mozg1984/delivery_routing_service/pkg/api"
-	"github.com/mozg1984/delivery_routing_service/pkg/config"
 	"github.com/rafaeljusto/redigomock"
 )
 
@@ -119,16 +116,8 @@ func Test_storage_GetDelivery(t *testing.T) {
 func mockRedisStorage() (*redigomock.Conn, *storage) {
 	redisConnectionMock := redigomock.NewConn()
 
-	c, err := config.NewConfig()
-	if err != nil {
-		log.Fatalf("an error '%s' was not expected when creating a configuration", err)
-	}
-
 	testStorage := &storage{
 		pool: &redis.Pool{
-			MaxIdle:     c.Redis.MaxIdle,
-			MaxActive:   c.Redis.MaxActive,
-			IdleTimeout: time.Duration(c.Redis.IdleTimeout) * time.Second,
 			Dial: func() (redis.Conn, error) {
 				return redisConnectionMock, nil
 			},
