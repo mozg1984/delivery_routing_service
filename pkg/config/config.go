@@ -34,6 +34,7 @@ func NewConfig() (*Config, error) {
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./config/")
+	viper.AddConfigPath("./pkg/config/")
 	viper.SetConfigType("yml")
 	viper.AutomaticEnv()
 
