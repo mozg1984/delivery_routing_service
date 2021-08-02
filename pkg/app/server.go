@@ -5,19 +5,16 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/mozg1984/delivery_routing_service/pkg/api"
 	"github.com/mozg1984/delivery_routing_service/pkg/config"
 )
 
 type Server struct {
-	router          *httprouter.Router
-	deliveryService api.DeliveryService
+	router *httprouter.Router
 }
 
-func NewServer(router *httprouter.Router, deliveryService api.DeliveryService) *Server {
+func NewServer(router *httprouter.Router) *Server {
 	return &Server{
-		router:          router,
-		deliveryService: deliveryService,
+		router: router,
 	}
 }
 

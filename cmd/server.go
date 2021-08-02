@@ -24,10 +24,10 @@ func run() error {
 	storage := repository.NewStorage(&config.Redis)
 	deliveryService := api.NewDeliveryService(storage)
 
-	handler := app.NewHandler()
+	handler := app.NewHandler(deliveryService)
 	router := app.NewRouter(handler)
 
-	server := app.NewServer(router, deliveryService)
+	server := app.NewServer(router)
 	server.Run(&config.Server)
 
 	return nil
