@@ -1,8 +1,8 @@
 package api
 
 type Coordinates struct {
-	Latitude  float32 `json:"lat"`
-	Longitude float32 `json:"lng"`
+	Latitude  float64 `json:"lat"`
+	Longitude float64 `json:"lng"`
 }
 
 type DeliveryID uint
