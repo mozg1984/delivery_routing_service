@@ -1,7 +1,10 @@
 package app
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
+	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mozg1984/delivery_routing_service/pkg/api"
@@ -18,42 +21,64 @@ func NewHandler(deliveryService api.DeliveryService) *Handler {
 }
 
 func (h *Handler) CreateDelivery(c *gin.Context) {
-	fmt.Fprint(c.Writer, "Create delivery")
+	newDeliveryRequest := api.NewDeliveryRequest{}
 
-	//newDeliveryRequest := api.NewDeliveryRequest{}
+	decoder := json.NewDecoder(c.Request.Body)
+	err := decoder.Decode(&newDeliveryRequest)
+	if err != nil {
+		log.Printf("An error occurred while decoding in the creating delivery: '%v'", err)
+		c.String(http.StatusBadRequest, "Invalid params")
+		return
+	}
 
-	//decoder := json.NewDecoder(r.Body)
-	//err := decoder.Decode(&newDeliveryRequest)
-	//if err != nil {
-	//	w.WriteHeader(http.StatusBadRequest)
-	//	return
-	//}
+	err = h.deliveryService.New(newDeliveryRequest)
+	if err != nil {
+		log.Printf("An error occurred while calling api client in the creating delivery: '%v'", err)
+		c.String(http.StatusBadRequest, "Invalid params")
+		return
+	}
 
-	//err = h.deliveryService.New(newDeliveryRequest)
-	//if err != nil {
-	//	w.WriteHeader(http.StatusBadRequest)
-	//	return
-	//}
-
-	//w.WriteHeader(http.StatusNoContent)
+	c.Status(http.StatusNoContent)
 }
 
 func (h *Handler) GetDeliveries(c *gin.Context) {
-	fmt.Fprint(c.Writer, "Get list of deliveries ordered by created time")
+	deliveries, err := h.deliveryService.GetAll()
+	if err != nil {
+		log.Printf("An error occurred while calling api client in getting delivery: '%v'", err)
+		c.String(http.StatusBadRequest, "Something went wrong, please try later")
+		return
+	}
 
-	//deliveries := h.deliveryService.GetAll()
+	c.JSON(http.StatusOK, deliveries)
 }
 
 func (h *Handler) GetDelivery(c *gin.Context) {
-	fmt.Fprint(c.Writer, "Get delivery")
+	id := c.Param("id")
 
-	//deliveryId := params.ByName("id")
-	////h.deliveryService.FingByID()
+	deliveryId, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		log.Printf("An error occurred while converting param in getting delivery: '%v'", err)
+		c.JSON(http.StatusOK, nil)
+		return
+	}
 
-	//fmt.Fprint(w, deliveryId)
+	delivery, err := h.deliveryService.FingByID(api.DeliveryID(deliveryId))
+	if err != nil {
+		log.Printf("An error occurred while calling api client in getting delivery: '%v'", err)
+		c.JSON(http.StatusOK, nil)
+		return
+	}
+
+	c.JSON(http.StatusOK, delivery)
 }
 
 func (h *Handler) GetRouteDistance(c *gin.Context) {
-	fmt.Fprint(c.Writer, "Get route distance")
-	//routeDistance := h.deliveryService.CalculateRouteDistance()
+	routeDistance, err := h.deliveryService.CalculateRouteDistance()
+	if err != nil {
+		log.Printf("An error occurred while calling api client in getting route distance: '%v'", err)
+		c.String(http.StatusOK, "-1")
+		return
+	}
+
+	c.String(http.StatusOK, strconv.FormatFloat(routeDistance, 'E', -1, 64))
 }
