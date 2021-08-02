@@ -4,15 +4,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
+	"github.com/gin-gonic/gin"
 	"github.com/mozg1984/delivery_routing_service/pkg/config"
 )
 
 type Server struct {
-	router *httprouter.Router
+	router *gin.Engine
 }
 
-func NewServer(router *httprouter.Router) *Server {
+func NewServer(router *gin.Engine) *Server {
 	return &Server{
 		router: router,
 	}
@@ -23,11 +23,16 @@ func (s *Server) Run(config *config.Server) error {
 
 	log.Print("Starting server")
 
-	err := http.ListenAndServe(addr, s.router)
+	err := http.ListenAndServe(addr, s)
 	if err != nil {
 		log.Printf("An error occurred while starting the server: %v", err)
 		return err
 	}
 
 	return nil
+}
+
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	s.router.ServeHTTP(w, r)
 }

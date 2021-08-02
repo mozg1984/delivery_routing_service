@@ -1,17 +1,22 @@
 package app
 
-import "github.com/julienschmidt/httprouter"
+import (
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+)
 
-type Router *httprouter.Router
+type Router *gin.Engine
 
-func NewRouter(handler *Handler) *httprouter.Router {
-	router := httprouter.New()
+func NewRouter(handler *Handler) *gin.Engine {
+	router := gin.Default()
+	router.Use(cors.Default())
 
+	deliveries := router.Group("/deliveries")
 	{
-		router.POST("/deliveries/add_delivery", handler.CreateDelivery)
-		router.GET("/deliveries/list", handler.GetDeliveries)
-		router.GET("/deliveries/", handler.GetDelivery)
-		router.GET("/deliveries/route_distance", handler.GetRouteDistance)
+		deliveries.POST("/add_delivery", handler.CreateDelivery)
+		deliveries.GET("/list", handler.GetDeliveries)
+		deliveries.GET("/route_distance", handler.GetRouteDistance)
+		deliveries.GET("/:id", handler.GetDelivery)
 	}
 
 	return router
