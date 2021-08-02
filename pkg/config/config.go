@@ -14,6 +14,7 @@ type Redis struct {
 	DB          int
 	Host        string
 	Port        string
+	Type        string
 	MaxIdle     int
 	MaxActive   int
 	IdleTimeout int
@@ -25,13 +26,14 @@ type Config struct {
 }
 
 func NewConfig() (*Config, error) {
-	config = Config{
+	config := Config{
 		Server: Server{},
 		Redis:  Redis{},
 	}
 
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("./config/")
 	viper.SetConfigType("yml")
 	viper.AutomaticEnv()
 
