@@ -12,7 +12,7 @@ import (
 
 type Storage interface {
 	CreateDelivery(request api.NewDeliveryRequest) error
-	GetDeliveries() (*[]api.Delivery, error)
+	GetDeliveries(flushdb bool) (*[]api.Delivery, error)
 	GetDelivery(deliveryId api.DeliveryID) (api.Delivery, error)
 	GetRawValues(flushdb bool) (*[]string, error)
 	GetRawValue(key string) (string, error)
@@ -76,8 +76,8 @@ func (s *storage) CreateDelivery(request api.NewDeliveryRequest) error {
 	return nil
 }
 
-func (s *storage) GetDeliveries() (*[]api.Delivery, error) {
-	rawValues, err := s.GetRawValues(true)
+func (s *storage) GetDeliveries(flushdb bool) (*[]api.Delivery, error) {
+	rawValues, err := s.GetRawValues(flushdb)
 	if err != nil {
 		return nil, err
 	}

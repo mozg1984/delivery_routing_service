@@ -76,9 +76,9 @@ func Test_storage_GetDeliveries(t *testing.T) {
 		redisConnectionMock.Command("flushdb", "async"),
 	}
 
-	deliveries, err := testStorage.GetDeliveries()
+	deliveries, err := testStorage.GetDeliveries(true)
 	if err != nil {
-		t.Errorf("Getting a deliveries is failed: %s", err)
+		t.Errorf("Getting deliveries is failed: %s", err)
 	}
 
 	if len(*deliveries) != 3 {

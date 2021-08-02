@@ -22,7 +22,7 @@ type deliveryService struct {
 
 type DeliveryRepository interface {
 	CreateDelivery(request NewDeliveryRequest) error
-	GetDeliveries() (*[]Delivery, error)
+	GetDeliveries(flushdb bool) (*[]Delivery, error)
 	GetDelivery(deliveryId DeliveryID) (Delivery, error)
 }
 
@@ -66,7 +66,7 @@ func (d *deliveryService) validate(delivery NewDeliveryRequest) error {
 }
 
 func (d *deliveryService) GetAll() (*[]Delivery, error) {
-	return d.storage.GetDeliveries()
+	return d.storage.GetDeliveries(true)
 }
 
 func (d *deliveryService) FingByID(deliveryId DeliveryID) (Delivery, error) {
@@ -76,7 +76,7 @@ func (d *deliveryService) FingByID(deliveryId DeliveryID) (Delivery, error) {
 func (d *deliveryService) CalculateRouteDistance() (float64, error) {
 	routeDistance := float64(0)
 
-	deliveries, err := d.storage.GetDeliveries()
+	deliveries, err := d.storage.GetDeliveries(false)
 	if err != nil {
 		return routeDistance, nil
 	}

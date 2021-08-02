@@ -12,7 +12,7 @@ func (m *mockDeliveryRepo) CreateDelivery(request NewDeliveryRequest) error {
 	return nil
 }
 
-func (m *mockDeliveryRepo) GetDeliveries() (*[]Delivery, error) {
+func (m *mockDeliveryRepo) GetDeliveries(flushdb bool) (*[]Delivery, error) {
 	// TODO: implement it
 	var delivery Delivery
 	return &[]Delivery{delivery}, nil
