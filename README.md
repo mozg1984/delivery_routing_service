@@ -1,4 +1,4 @@
-# Test service (delivery routing service)
+# Test web service (delivery routing service)
 
 It provides 4 endpoints:
 - POST     /deliveries/add_delivery     (it creates a new delivery item)
@@ -10,7 +10,7 @@ By default, the server listens for requests on the address - `0.0.0.0:8080`
 
 ## Installation
 
-It requires [Golang](https://golang.org/) v1.16.6+ to run.
+It requires [Golang](https://golang.org/) v1.16.6+ and [Redis](https://redis.io/) v.6.2.1+ to run.
 
 Install the dependencies, run tests and start the server.
 
